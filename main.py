@@ -61,7 +61,7 @@ async def main():
     await setup_cogs() 
     
     async with bot:
-        await bot.start(TOKEN)
+        await bot.start(TOKEN)# type: ignore
 
 if __name__ == "__main__":
     try:
