@@ -1,6 +1,6 @@
-import discord
-from discord.ext import commands
-from dotenv import load_dotenv
+import discord # type: ignore
+from discord.ext import commands # type: ignore
+from dotenv import load_dotenv # type: ignore
 import os
 
 load_dotenv()
