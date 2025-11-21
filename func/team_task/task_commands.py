@@ -1,6 +1,6 @@
-import discord
-from discord import app_commands
-from discord.ext import commands
+import discord #type: ignore
+from discord import app_commands#type: ignore
+from discord.ext import commands#type: ignore
 
 from .db import create_task, get_all_tasks, init_db
 from .ui import task_to_embed
