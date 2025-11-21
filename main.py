@@ -2,9 +2,12 @@ import discord # type: ignore
 from discord.ext import commands # type: ignore
 from dotenv import load_dotenv # type: ignore
 import os
+import asyncio
+
 
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
+GITHUB_TOKEN = os.getenv("GITHUB_TOKEN") 
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -12,13 +15,18 @@ intents.message_content = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 from func.team_task.task_commands import TaskCommands # type: ignore
-
+from github_repo_func.github_cog import GithubAnalyzerCog
 @bot.event
 async def on_ready():
     print(f"Bot conectat ca {bot.user}")
-
-    synced = await bot.tree.sync()
-    print(f"Comenzi slash sincronizate: {len(synced)}")
+    
+    #  Sincronizarea este esențială pentru a înregistra /repo, /task_list, și /task_new
+    try:
+        
+        synced = await bot.tree.sync()
+        print(f"Comenzi slash sincronizate: {len(synced)}")
+    except Exception as e:
+        print(f"Eroare la sincronizarea comenzilor: {e}")
 
 
 @bot.command()
@@ -30,17 +38,38 @@ async def salut(ctx):
     await ctx.send("salut si tie!")
 
 
-async def setup():
-    """Încărcăm COG-urile înainte ca botul să pornească."""
-    await bot.add_cog(TaskCommands(bot))
+async def setup_cogs():
+    """Încărcăm toate COG-urile înainte ca botul să pornească."""
+    
+    # 2. Adaug COG-ul existent (TaskCommands)
+    try:
+        await bot.add_cog(TaskCommands(bot))
+        print("TaskCommands COG încărcat.")
+    except Exception as e:
+        print(f"Eroare la încărcarea TaskCommands: {e}")
+        
+    # 3. Adaug noul COG (GithubAnalyzerCog)
+    try:
+        await bot.add_cog(GithubAnalyzerCog(bot))
+        print("GithubAnalyzerCog COG încărcat.")
+    except Exception as e:
+        print(f"Eroare la încărcarea GithubAnalyzerCog: {e}")
+
 
 async def main():
+   
+    await setup_cogs() 
+    
     async with bot:
-        await setup()
-        await bot.start(TOKEN)
+        await bot.start(TOKEN)# type: ignore
 
-import asyncio
-asyncio.run(main())
+if __name__ == "__main__":
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        print("Botul a fost oprit.")
+    except Exception as e:
+        print(f"O eroare a apărut la rularea botului: {e}")
 
 # ============================================================================
 # COMPLETED TASK MANAGEMENT FUNCTIONALITY
@@ -71,7 +100,12 @@ asyncio.run(main())
 #    - Marks a task as in progress (status: "in_progress")
 #    - Updates task status to show work has started
 #    - Provides confirmation message
-#
+#  
+# 6. /repo <link>
+#    - Analyzes a GitHub repository given its link
+#    - Fetches repository data using GitHub API
+#    - Displays repository statistics in an embedded message
+#    - Shows number of branches, pull requests, commits, stars, forks, and main language
 # Database Structure:
 # - tasks.db contains a 'tasks' table with fields:
 #   * task_id (INTEGER PRIMARY KEY AUTOINCREMENT)
