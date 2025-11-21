@@ -49,12 +49,19 @@ async def setup_cogs():
 
 
 async def main():
+   
+    await setup_cogs() 
+    
     async with bot:
-        await setup_cogs()
         await bot.start(TOKEN)
 
-import asyncio
-asyncio.run(main())
+if __name__ == "__main__":
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        print("Botul a fost oprit.")
+    except Exception as e:
+        print(f"O eroare a apărut la rularea botului: {e}")
 
 # ============================================================================
 # COMPLETED TASK MANAGEMENT FUNCTIONALITY
