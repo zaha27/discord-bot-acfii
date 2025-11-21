@@ -1,6 +1,11 @@
 from dataclasses import dataclass
 from datetime import datetime
 
+# Status constants
+STATUS_PENDING = "pending"
+STATUS_IN_PROGRESS = "in_progress"
+STATUS_DONE = "done"
+
 @dataclass
 class Task:
     task_id: int

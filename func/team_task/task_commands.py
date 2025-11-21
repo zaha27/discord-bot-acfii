@@ -4,6 +4,7 @@ from discord.ext import commands # type: ignore
 
 from .db import create_task, get_all_tasks, init_db, assign_task, update_task_status, get_task
 from .ui import task_to_embed
+from .model import STATUS_IN_PROGRESS, STATUS_DONE
 
 class TaskCommands(commands.Cog):
     def __init__(self, bot):
@@ -40,7 +41,7 @@ class TaskCommands(commands.Cog):
 
     @app_commands.command(name="task_done", description="Marcheaza un task ca fiind finalizat")
     async def task_done(self, interaction: discord.Interaction, task_id: int):
-        task = await update_task_status(task_id, "done")
+        task = await update_task_status(task_id, STATUS_DONE)
         
         if task:
             await interaction.response.send_message(f"✅ Task **#{task_id}** marcat ca finalizat!")
@@ -49,7 +50,7 @@ class TaskCommands(commands.Cog):
 
     @app_commands.command(name="task_progress", description="Marcheaza un task ca fiind in progres")
     async def task_progress(self, interaction: discord.Interaction, task_id: int):
-        task = await update_task_status(task_id, "in_progress")
+        task = await update_task_status(task_id, STATUS_IN_PROGRESS)
         
         if task:
             await interaction.response.send_message(f"✅ Task **#{task_id}** marcat ca in progres!")

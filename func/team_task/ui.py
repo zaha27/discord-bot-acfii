@@ -1,10 +1,10 @@
 import discord
-from .model import Task
+from .model import Task, STATUS_PENDING, STATUS_IN_PROGRESS
 
 def task_to_embed(task: Task) -> discord.Embed:
     color = (
-        discord.Color.gold() if task.status == "pending" else
-        discord.Color.blue() if task.status == "in_progress" else
+        discord.Color.gold() if task.status == STATUS_PENDING else
+        discord.Color.blue() if task.status == STATUS_IN_PROGRESS else
         discord.Color.green()
     )
 
