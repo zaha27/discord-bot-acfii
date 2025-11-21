@@ -2,6 +2,8 @@ import discord # type: ignore
 from discord.ext import commands # type: ignore
 from dotenv import load_dotenv # type: ignore
 import os
+import asyncio
+
 
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
