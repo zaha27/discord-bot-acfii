@@ -5,6 +5,7 @@ import os
 
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
+GITHUB_TOKEN = os.getenv("GITHUB_TOKEN") 
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -12,7 +13,7 @@ intents.message_content = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 from func.team_task.task_commands import TaskCommands # type: ignore
-
+from github_repo_func.github_cog import GithubAnalyzerCog
 @bot.event
 async def on_ready():
     print(f"Bot conectat ca {bot.user}")
