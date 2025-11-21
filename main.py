@@ -100,7 +100,12 @@ if __name__ == "__main__":
 #    - Marks a task as in progress (status: "in_progress")
 #    - Updates task status to show work has started
 #    - Provides confirmation message
-#
+#  
+# 6. /repo <link>
+#    - Analyzes a GitHub repository given its link
+#    - Fetches repository data using GitHub API
+#    - Displays repository statistics in an embedded message
+#    - Shows number of branches, pull requests, commits, stars, forks, and main language
 # Database Structure:
 # - tasks.db contains a 'tasks' table with fields:
 #   * task_id (INTEGER PRIMARY KEY AUTOINCREMENT)
