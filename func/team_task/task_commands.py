@@ -2,7 +2,7 @@ import discord # type: ignore
 from discord import app_commands # type: ignore
 from discord.ext import commands # type: ignore 
 
-from .db import create_task, get_all_tasks, init_db
+from .db import create_task, get_all_tasks, init_db, assign_task, update_task_status, get_task
 from .ui import task_to_embed
 
 class TaskCommands(commands.Cog):
@@ -28,3 +28,30 @@ class TaskCommands(commands.Cog):
         embeds = [task_to_embed(t) for t in tasks]
 
         await interaction.response.send_message(embeds=embeds)
+
+    @app_commands.command(name="task_assign", description="Asigneaza un task unui user")
+    async def task_assign(self, interaction: discord.Interaction, task_id: int, user: discord.Member):
+        task = await assign_task(task_id, user.mention)
+        
+        if task:
+            await interaction.response.send_message(f"✅ Task **#{task_id}** asignat lui {user.mention}")
+        else:
+            await interaction.response.send_message(f"❌ Task-ul cu ID **{task_id}** nu exista.")
+
+    @app_commands.command(name="task_done", description="Marcheaza un task ca fiind finalizat")
+    async def task_done(self, interaction: discord.Interaction, task_id: int):
+        task = await update_task_status(task_id, "done")
+        
+        if task:
+            await interaction.response.send_message(f"✅ Task **#{task_id}** marcat ca finalizat!")
+        else:
+            await interaction.response.send_message(f"❌ Task-ul cu ID **{task_id}** nu exista.")
+
+    @app_commands.command(name="task_progress", description="Marcheaza un task ca fiind in progres")
+    async def task_progress(self, interaction: discord.Interaction, task_id: int):
+        task = await update_task_status(task_id, "in_progress")
+        
+        if task:
+            await interaction.response.send_message(f"✅ Task **#{task_id}** marcat ca in progres!")
+        else:
+            await interaction.response.send_message(f"❌ Task-ul cu ID **{task_id}** nu exista.")
